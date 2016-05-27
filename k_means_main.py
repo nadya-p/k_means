@@ -2,10 +2,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import k_means
 
+import cProfile, pstats, io
 
 n_dim = 2
-n_clusters = 2
-n_samples = 5
+# n_clusters = 10
+# n_samples = 10000
+n_clusters = 3
+n_samples = 10
 X = np.ndarray([n_clusters*n_samples, n_dim])
 print("Plotting the initial distribution of points")
 colors = np.linspace(0, 1, n_clusters)
@@ -19,10 +22,19 @@ for clr, i in zip(colors, range(0, n_clusters)):
 print("Points:")
 print(X)
 
+# pr = cProfile.Profile()
+# pr.enable()
+
 print('\nCalculating clusters\n')
 asked_for_n_clusters = 3
 colors = np.linspace(0, 1, asked_for_n_clusters)
 closest_center, initial_centers = k_means.k_means(X, asked_for_n_clusters)
+
+# pr.disable()
+# s = io.StringIO()
+# ps = pstats.Stats(pr, stream=s).sort_stats('cumulative')
+# ps.print_stats()
+# print(s.getvalue())
 
 print("Closest centers:")
 print(closest_center)

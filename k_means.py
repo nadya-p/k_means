@@ -3,7 +3,10 @@ from sklearn.utils import check_random_state
 
 
 def k_means(x, k, centers=None):
-    """Distribute the data from x into k clusters"""
+    """Distribute the data from x into k clusters
+    :param x: np.ndarray containing the datapoints
+    :param k: int is the number of clusters
+    :param centers: np.ndarray allows to specify the initial positions of centers"""
 
     for i in range(x.ndim):
         if x.shape[i] == 0:
@@ -34,11 +37,5 @@ def _get_nearest_center(x, centers):
     for i_center in range(0, centers.shape[0]):
         distance_to_center[:, i_center] = np.linalg.norm(x - centers[i_center, :], axis=1)
     closest_center = np.argmin(distance_to_center, axis=1)
-
-    # Calculate the overall scalar norm
-    j = 0
-    for i_center in range(0, x.shape[0]):
-
-        # Don't recalculate the norm, reuse the one already calculated
-        j += distance_to_center[i_center, closest_center[i_center]]
+    j = np.sum(np.min(distance_to_center, axis=1))
     return closest_center, j
