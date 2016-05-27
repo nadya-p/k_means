@@ -7,10 +7,6 @@ n_dim = 2
 n_clusters = 2
 n_samples = 5
 X = np.ndarray([n_clusters*n_samples, n_dim])
-
-print("Points:")
-print(X)
-
 print("Plotting the initial distribution of points")
 colors = np.linspace(0, 1, n_clusters)
 markers = ['o', '*', 'H', 's', 'v', 'p', '>', '.', 'D', 'h', 'x', 'd', ',', '_', '^']
@@ -19,6 +15,9 @@ for clr, i in zip(colors, range(0, n_clusters)):
     x_current = np.random.multivariate_normal(initial_centers[i, :], [[1, 0], [0, 1]], n_samples)
     plt.scatter(x_current[:, 0], x_current[:, 1], s=1000, c=plt.cm.viridis(clr), marker=markers[i % len(markers)])
     X[i*n_samples:(i+1)*n_samples, :] = x_current
+
+print("Points:")
+print(X)
 
 print('\nCalculating clusters\n')
 asked_for_n_clusters = 3

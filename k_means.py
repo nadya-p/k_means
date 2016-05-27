@@ -2,7 +2,7 @@ import numpy as np
 from sklearn.utils import check_random_state
 
 
-def k_means(x, k):
+def k_means(x, k, centers=None):
     """Distribute the data from x into k clusters"""
 
     for i in range(x.ndim):
@@ -14,28 +14,16 @@ def k_means(x, k):
 
     # We want the random state to be repeatable (for the unit tests)
     random_state = check_random_state(0)
-    initial_center_indices = random_state.randint(0, high=x.shape[0], size=k)
+    if centers is None:
+        centers = x[random_state.randint(0, high=x.shape[0], size=k).tolist(), :]
 
-    centers = x[initial_center_indices, :]
     j = np.inf
     while True:
         j_previous = j
         closest_center, j = _get_nearest_center(x, centers)
         for i_center in range(0, centers.shape[0]):
-            if any(closest_center == i_center):
-                centers[i_center, :] = np.mean(x[closest_center == i_center, :], axis=0)
-            else:
-
-                # For this center no point is the closest to this one. Let's regenerate a new center
-                while True:
-                    new_center_index = random_state.randint(0, high=x.shape[0], size=1)
-                    if new_center_index not in initial_center_indices:
-                        break
-                    if len(initial_center_indices) > x.shape[0]:
-                        raise RuntimeError("Cannot generate a new guess for a center")
-                centers[i_center, :] = x[new_center_index, :]
-                initial_center_indices.append(new_center_index)
-        if j < j_previous:
+            centers[i_center, :] = np.mean(x[closest_center == i_center, :], axis=0)
+        if j >= j_previous:
             return closest_center, centers
 
 

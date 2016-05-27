@@ -29,8 +29,16 @@ def four_points():
     numpy.testing.assert_array_equal(clusters.tolist(), [0, 0, 1, 1])
 
 
+def separate_center():
+    X = np.asarray([(0, 1), (0, 2), (0, 3), (0, 10)])
+    clusters, centers = k_means.k_means(X, 2, np.asarray([(0, 2), (0, 10)]))
+    numpy.testing.assert_array_equal(clusters.tolist(), [0, 0, 0, 1])
+    numpy.testing.assert_array_equal(centers.tolist(), [[0, 2], [0, 10]])
+
+
 if __name__ == '__main__':
     no_points()
     one_point()
     two_points()
     four_points()
+    separate_center()
