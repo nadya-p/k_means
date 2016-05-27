@@ -25,8 +25,21 @@ def two_points():
     numpy.testing.assert_array_equal(centers, X)
 
 
-def four_points():
+def four_points_1d():
+    X = np.asarray([1, 2, 10, 11])
+    clusters, centers = k_means.k_means(X, 2)
+    numpy.testing.assert_array_equal(clusters.tolist(), [0, 0, 1, 1])
+
+
+def four_points_2d():
     X = np.asarray([(0, 1), (0, 2), (0, 10), (0, 11)])
+    clusters, centers = k_means.k_means(X, 2)
+    numpy.testing.assert_array_equal(clusters.tolist(), [0, 0, 1, 1])
+
+
+def four_points_3d():
+    # It doesn't make sense to use have more dimensions in ndarray here: it can be reshaped anyway to 2D
+    X = np.asarray([(0, 1, 1), (0, 1, 2), (0, 1, 10), (0, 1, 11)])
     clusters, centers = k_means.k_means(X, 2)
     numpy.testing.assert_array_equal(clusters.tolist(), [0, 0, 1, 1])
 
@@ -67,6 +80,9 @@ if __name__ == '__main__':
     no_points()
     one_point()
     two_points()
-    four_points()
+    four_points_1d()
+    four_points_2d()
+    four_points_3d()
     separate_center()
     compare_to_sklearn()
+    print('All the tests have passed')
