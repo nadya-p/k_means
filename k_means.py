@@ -2,38 +2,38 @@ import numpy as np
 from sklearn.utils import check_random_state
 
 
-def k_means(x, k, centers=None):
+def k_means(x, k, centers=None, random_state=0):
     """Distribute the data from x into k clusters
     :param x: np.ndarray containing the datapoints
     :param k: int is the number of clusters
-    :param centers: np.ndarray allows to specify the initial positions of centers"""
+    :param centers: np.ndarray allows to specify the initial positions of centers
+    :random_state: int is the seed for the random number generator"""
 
-    _x = x
-    if _x.ndim != 2:
+    if x.ndim != 2:
         n_features = 1
-        for i in range(1, _x.ndim):
-            n_features *= _x.shape[i]
-        x = _x.reshape(_x.shape[0], n_features)
+        for i in range(1, x.ndim):
+            n_features *= x.shape[i]
+        x = x.copy().reshape(x.shape[0], n_features)
 
-    for i in range(_x.ndim):
-        if _x.shape[i] == 0:
+    for i in range(x.ndim):
+        if x.shape[i] == 0:
             raise ValueError("The input array should not contain any singleton dimensions")
 
-    if k > _x.shape[0]:
+    if k > x.shape[0]:
         raise ValueError("The number of clusters should not exceed the number of data points")
 
     # We want the random state to be repeatable (for the unit tests)
-    random_state = check_random_state(0)
+    random_state = check_random_state(random_state)
     if centers is None:
-        centers = x[random_state.randint(0, high=_x.shape[0], size=k).tolist()]
+        centers = x[random_state.randint(0, high=x.shape[0], size=k)]
 
-    j = np.inf
+    sum_of_distances = np.inf
     while True:
-        j_previous = j
-        closest_center, j = _get_nearest_center(x, centers)
+        previous_sum_of_distances = sum_of_distances
+        closest_center, sum_of_distances = _get_nearest_center(x, centers)
         for i_center in range(centers.shape[0]):
             centers[i_center, :] = np.mean(x[closest_center == i_center, :], axis=0)
-        if j >= j_previous:
+        if sum_of_distances >= previous_sum_of_distances:
             return closest_center, centers
 
 
