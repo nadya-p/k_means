@@ -13,7 +13,7 @@ def k_means(x, k, centers=None, random_state=0):
         n_features = 1
         for i in range(1, x.ndim):
             n_features *= x.shape[i]
-        x = x.copy().reshape(x.shape[0], n_features)
+        x = x.reshape(x.shape[0], n_features)
 
     for i in range(x.ndim):
         if x.shape[i] == 0:
